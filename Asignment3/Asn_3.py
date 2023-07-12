@@ -1,65 +1,58 @@
-# Importing required libraries
-
-# pip install selenium
-
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-# Setting up the webdriver
+# Create a new instance of the Firefox driver
 driver = webdriver.Chrome()
 
-# Navigating to the Amazon.ca homepage
-driver.get("https://ca.shein.com/")
-time.sleep(3)
+# Navigate to Amazon.com
+driver.get("https://www.amazon.com")
+wait = WebDriverWait(driver, 20)
 
-# Finding the search bar and entering text
-# search_bar = driver.find_element_by_id("id","twotabsearchtextbox") old syntax
-search_bar = driver.find_element("class","header-search-input j-header-search-input")
-search_bar.send_keys("cap")
+# Find the search input field and enter a search query
+search_input = driver.find_element(By.ID, "twotabsearchtextbox")
+search_input.send_keys("mobile")
 
-search_button = driver.find_element("class","search-btn she-btn-black j-search-btn")
+# Click the search button
+search_button = driver.find_element(By.ID, "nav-search-submit-button")
 search_button.click()
 
-# Submitting the search query
-search_bar.send_keys(Keys.RETURN)
+Todays_Deal = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(@href,'/gp/goldbox?ref_=nav_cs_gb')]")))
+Todays_Deal.click()
 
-# Waiting for the search results page to load
-time.sleep(5)
+Customer_Service = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id='nav-xshop']//a[contains(@class,'')][normalize-space()='Customer Service']")))
+Customer_Service.click()
 
-# Verifying that the search results page has loaded
-assert "cap" in driver.title
+Registry = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Registry']")))
+Registry.click()
 
-# Selecting a cap from the search results
-cap_link = driver.find_element("xpath","/html/body/div[1]/div[1]/div/div[2]/div[2]/section/div[1]/section[3]/div[1]/a/img[2]")
-# laptop_link = driver.find_element("By.CSS_SELECTOR","span[data-component-type='s-product-image'] a")
-cap_link.click()
+# Wait for the search results to load
+#wait = WebDriverWait(driver, 20)
+#search_results = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div[data-component-type='s-search-result']")))
 
+# Click on the first search result
+#first_result = search_results[0]
+#first_result.click()
 
-# Waiting for the cap details page to load
-time.sleep(5)
+# Add the item to the cart
+#add_to_cart_button = driver.find_element(By.ID, "add-to-cart-button")
+#add_to_cart_button.click()
 
-# Adding the laptop to the cart
-add_to_cart_button = driver.find_element("id","add-to-cart-button")
-add_to_cart_button.click()
+# Wait for the cart count to update
+#wait.until(EC.text_to_be_present_in_element((By.ID, "nav-cart-count"), "1"))
 
-# Waiting for the cart to update
-time.sleep(5)
+# View the cart
+#view_cart_button = driver.find_element(By.ID, "nav-cart")
+#view_cart_button.click()
 
-# Clicking on no thanks button
-no_thanks_button= driver.find_element("xpath","/html/body/div[9]/div[3]/div[1]/div/div/div[2]/div[2]/div/div/div[3]/div/span[2]/span/input")
-no_thanks_button.click()
-time.sleep(2)
+# Perform an assertion to check if the item is in the cart
+#cart_item_title = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".sc-product-title")))
+#assert "Laptop" in cart_item_title.text
 
-proceed_to_checkout= driver.find_element("xpath","/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[3]/div/div[1]/form/span/span/span/input")
-proceed_to_checkout.click()
-time.sleep(2)
+# Proceed to checkout
+#checkout_button = driver.find_element(By.NAME, "proceedToRetailCheckout")
+#checkout_button.click()
 
-
-# Verifying that the laptop has been added to the cart
-#cart_count = driver.find_element("id","nav-cart-count")
-#assert cart_count.text == "1"
-#cart_count.click()
-
-# Closing the webdriver
-driver.close()
+# Close the browser window
+driver.quit()
